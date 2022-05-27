@@ -9,7 +9,10 @@ mongoose.connect(mongoURL, {
 });
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true,
+  },
   exercises: [
     {
       _id: mongoose.ObjectId,
