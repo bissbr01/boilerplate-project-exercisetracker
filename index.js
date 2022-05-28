@@ -23,15 +23,34 @@ app.get("/api/users", async (req, res, next) => {
   }
 });
 
+app.get("/api/users/:_id", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params._id).exec();
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.get("/api/users/:_id/logs", async (req, res, next) => {
   try {
-    const user = await User.findById(req.params._id)
-      .where("exercises.date")
-      .gte(req.query.from)
-      .lte(req.query.to)
-      .limit(req.query.limit)
-      .exec();
-    res.json(user);
+    const user = await User.findById(req.params._id);
+    let log;
+    if (req.query.to && req.query.from) {
+      const start = new Date(req.query.from);
+      const end = new Date(req.query.to);
+      log = [...user.exercises].filter((exercise) => {
+        return (
+          exercise.date.getTime() >= start.getTime() &&
+          exercise.date.getTime() <= end.getTime()
+        );
+      });
+      if (req.query.limit) {
+        log = log.slice(0, req.query.limit);
+      }
+    }
+    console.log("log: ", log);
+    log ? res.json(log) : res.json(user);
   } catch (error) {
     next(error);
   }
@@ -52,10 +71,10 @@ app.post("/api/users/:_id/exercises", async (req, res, next) => {
     const user = await User.findById(req.params._id).exec();
     if (user) {
       user.exercises.push({
-        _id: new mongoose.Types.ObjectId(req.body._id),
+        _id: new mongoose.Types.ObjectId(),
         description: req.body.description,
         duration: req.body.duration,
-        date: req.body.date,
+        date: req.body.date || new Date(),
       });
       const result = await user.save();
       res.json(result);

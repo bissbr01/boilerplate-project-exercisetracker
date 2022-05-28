@@ -16,8 +16,14 @@ const userSchema = new mongoose.Schema({
   exercises: [
     {
       _id: mongoose.ObjectId,
-      description: String,
-      duration: Number,
+      description: {
+        type: String,
+        required: true,
+      },
+      duration: {
+        type: Number,
+        required: true,
+      },
       date: Date,
     },
   ],

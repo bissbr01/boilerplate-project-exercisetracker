@@ -12,14 +12,23 @@ GET http://{{host}}/api/users
 
 ###
 
-GET http://{{host}}/api/users/{{userId}}/logs HTTP/1.1
-  ?from=1990-01-01
-  &to=2022-04-01
-  &limit=100
+GET http://{{host}}/api/users/{{userId}}
+
 ###
 
+GET http://{{host}}/api/users/{{userId}}/logs?limit=10 HTTP/1.1
 
-GET http://{{host}}/api/users/2  HTTP/1.1
+
+
+###
+GET http://{{host}}/api/users/{{userId}}/logs
+  ?from=2022-01-13
+  &to=2022-06-01
+  &limit=10
+
+###
+GET http://{{host}}/api/users/{{userId}}/logs HTTP/1.1
+
 
 ###
 
@@ -32,6 +41,14 @@ username=Phillip300
 POST http://{{host}}/api/users/{{userId}}/exercises HTTP/1.1
 Content-Type: {{contentType}}
 
+description=jogging
+&duration=20
+&date=2022-1-01
+
+###
+
+POST http://{{host}}/api/users/{{userId}}/exercises HTTP/1.1
+Content-Type: {{contentType}}
+
 description=climbing
 &duration=20
-&date=2022-1-13
